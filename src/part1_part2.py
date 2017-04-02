@@ -4,13 +4,19 @@ from collections import Counter
 
 def parse_log_line(log_line):
     """
-    Parse log string into ip, date, request_method, url, protocol, response_code, and response_length.
+    Parse log string into ip, date, request_method,
+    url, protocol, response_code, and response_length.
     Return result as a dictionary.
+    Attributes:
+        log_line (str): one request from log file
     """
     pattern = '(?P<ip>\S+).*' + \
               '\[(?P<date>.+)\]\s*' + \
-              '"(?P<request_method>\S+)\s+(?P<url>\S+)\s+(?P<protocol>\S+)"\s*' + \
-              '(?P<response_code>\d+)\s+(?P<response_length>\d+|-)'
+              '"(?P<request_method>\S+)\s+' + \
+              '(?P<url>\S+)\s+' + \
+              '(?P<protocol>\S+)"\s*' + \
+              '(?P<response_code>\d+)\s+' + \
+              '(?P<response_length>\d+|-)'
 
     regex = re.compile(pattern)
     result = regex.match(log_line)
@@ -20,7 +26,9 @@ def parse_log_line(log_line):
 
 def read_from_file(file):
     """
-    Generator that reads line by line from log file.
+    Generator that yields line from log file.
+    Attributes:
+        file (str): url to log file
     """
     try:
         with open(file) as f_obj:
@@ -64,9 +72,8 @@ def write_information_to_file(file, log_line):
         f_obj.write(log_line + "\n")
 
 
-
 filename = "../insight_testsuite/tests/test_features/log_input/log.txt"
-#filename = "../log_input/log.txt"
+# filename = "../log_input/log.txt"
 ip_frequency = Counter()
 resources = Counter()
 
