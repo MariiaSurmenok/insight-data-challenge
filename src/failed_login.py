@@ -9,8 +9,16 @@ to a log file named blocked.txt.
 
 from datetime import timedelta
 
-import src.features
-
+# delete later
+def write_information_to_file(file, log_line):
+    """
+    Append information to a log file.
+    Attributes:
+        file (str): log file url
+        log_line (str): information to append
+    """
+    with open(file, 'a') as f_obj:
+        f_obj.write(log_line + "\n")
 
 class AccessBlocker():
     """
@@ -31,7 +39,7 @@ class AccessBlocker():
         """
         self.block_expiration_times = {}
         self.candidates = {}
-        self.output_filename = output_filename  # "../log_output/blocked.txt"
+        self.output_filename = output_filename  #
 
     def check_request(self, request):
         """
@@ -64,11 +72,12 @@ class AccessBlocker():
 
     def write_blocked_request(self, request):
         """ """
+        date_formatting = '%d/%b/%Y:%H:%M:%S %z'  # delete later
         log = request["ip"] + " - - [" + \
-            request["date"].strftime(src.features.date_formatting) + "] \"" + \
+            request["date"].strftime(date_formatting) + "] \"" + \
             request["request"] + "\" " + request["response_code"] + " " + \
-            request["response_length"] + ""
-        src.features.write_information_to_file(self.output_filename, log)
+            request["response_length"]
+        write_information_to_file(self.output_filename, log)
 
     def update_candidate_list(self, request):
         """ Check if some failed request are expired, add new one. """
