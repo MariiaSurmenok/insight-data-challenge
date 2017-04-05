@@ -1,14 +1,18 @@
 """ """
 
 import re
+import sys
 from collections import Counter
 from datetime import datetime
 from datetime import timedelta
+
+import failed_login
 
 
 date_formatting = '%d/%b/%Y:%H:%M:%S %z'
 request_pattern = '(?P<ip>\S+).*\s\[(?P<date>.+)\]\s*\"(?P<request>.+)\"\s*(?P<response_code>\d+)\s(?P<response_length>\d+|-)'
 url_pattern = '((GET|HEAD|POST)\s+)?(?P<request_url>.+?)\s+(HTTP.*)?$'
+
 
 def parse_log_line(log_line):
     """
@@ -93,7 +97,13 @@ def write_information_to_file(file, log_line):
         f_obj.write(log_line + "\n")
 
 
-filename = "../insight_testsuite/tests/test_features/log_input/log.txt"
+filename = sys.argv[1]
+hosts_filename = sys.argv[2]
+hours_filename = sys.argv[3]
+resources_filename = sys.argv[4]
+blocked_filename = sys.argv[5]
+
+# filename = "../insight_testsuite/tests/test_features/log_input/log.txt"
 # filename = "../log_input/log.txt"
 ip_frequency = Counter()
 resources = Counter()
@@ -110,13 +120,13 @@ top_hosts = ip_frequency.most_common(10)
 # Write results to a file
 for host in top_hosts:
     information = host[0] + "," + str(host[1])
-    write_information_to_file("../log_output/hosts.txt", information)
+    write_information_to_file(hosts_filename, information)
 
 top_resources = resources.most_common(10)
 
 # Write results to a file
 for resource in top_resources:
-    write_information_to_file("../log_output/resources.txt", resource[0])
+    write_information_to_file(resources_filename, resource[0])
 
 print("Feature 1 and 2 stop")
 
@@ -191,6 +201,12 @@ while request:
             requests_per_hour.append(0)
             start = start + timedelta(0, 1)
 
-
+# Write it in file
 print(len(popular_dates.values()))
 print(popular_dates)
+
+# FEATURE 4
+access_blocker = failed_login.AccessBlocker(blocked_filename)
+
+for entry in read_from_file(filename):
+    access_blocker.check_request(entry)
