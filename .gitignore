@@ -87,6 +87,7 @@ ENV/
 
 # Rope project settings
 .ropeproject
+.idea/
 
 log_input/
 log_output/
