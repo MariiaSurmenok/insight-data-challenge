@@ -1,8 +1,14 @@
+""" """
+
 import re
 from collections import Counter
 from datetime import datetime
 from datetime import timedelta
 
+
+date_formatting = '%d/%b/%Y:%H:%M:%S %z'
+request_pattern = '(?P<ip>\S+).*\s\[(?P<date>.+)\]\s*\"(?P<request>.+)\"\s*(?P<response_code>\d+)\s(?P<response_length>\d+|-)'
+url_pattern = '((GET|HEAD|POST)\s+)?(?P<request_url>.+?)\s+(HTTP.*)?$'
 
 def parse_log_line(log_line):
     """
@@ -19,8 +25,7 @@ def parse_log_line(log_line):
             - response_code
             - response_length
     """
-    request_pattern = '(?P<ip>\S+).*\s\[(?P<date>.+)\]\s*\"(?P<request>.+)\"\s*(?P<response_code>\d+)\s(?P<response_length>\d+|-)'
-    url_pattern = '((GET|HEAD|POST)\s+)?(?P<request_url>.+?)\s+(HTTP.*)?$'
+
     request_regex = re.compile(request_pattern)
     url_regex = re.compile(url_pattern)
 
@@ -29,9 +34,10 @@ def parse_log_line(log_line):
     if parsed_request:
         result = parsed_request.groupdict()
         result["url"] = result["request"]
+        result["date"] = datetime.strptime(result["date"], date_formatting)
         parsed_url = url_regex.match(result["request"])
         if parsed_url:
-            result["url"] = parsed_url.groupdict()["request_url"]
+            result["url"] = parsed_url.groupdict()["request_url"].strip()
         return result
     else:
         write_information_to_file("../log_output/corrupted_data.txt", log_line)
@@ -87,8 +93,8 @@ def write_information_to_file(file, log_line):
         f_obj.write(log_line + "\n")
 
 
-filename = "../insight_testsuite/tests/test_features/log_input/log.txt"
-# filename = "../log_input/log.txt"
+# filename = "../insight_testsuite/tests/test_features/log_input/log.txt"
+filename = "../log_input/log.txt"
 ip_frequency = Counter()
 resources = Counter()
 
@@ -123,9 +129,9 @@ popular_dates = {}
 
 generator = read_from_file(filename)
 request = next(generator)
-start = datetime.strptime(request["date"], '%d/%b/%Y:%H:%M:%S %z')
+start = request["date"]
 stop = start + timedelta(0, 3600)
-date_formatting = '%d/%b/%Y:%H:%M:%S %z'
+
 
 
 def save_hour(key_date, top_10, requests_in_current_hour):
@@ -156,12 +162,10 @@ def update_statistics(start_date, stop_date, top_10, requests_in_current_hour):
 
 
 while request:
-    request_date = datetime.strptime(request["date"], date_formatting)
+    if request["date"] < stop:
+        requests_per_hour[(request["date"] - start).seconds] += 1
 
-    if request_date < stop:
-        requests_per_hour[(request_date - start).seconds] += 1
-
-    while request_date > stop:
+    while request["date"] > stop:
         # Save only the top 10 popular hours.
         date_stamp = start.strftime(date_formatting)
         save_hour(date_stamp, popular_dates, requests_per_hour)
