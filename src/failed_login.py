@@ -9,16 +9,8 @@ to a log file named blocked.txt.
 
 from datetime import timedelta
 
-# delete later
-def write_information_to_file(file, log_line):
-    """
-    Append information to a log file.
-    Attributes:
-        file (str): log file url
-        log_line (str): information to append
-    """
-    with open(file, 'a') as f_obj:
-        f_obj.write(log_line + "\n")
+from io_utils import date_formatting, read_from_file, write_information_to_file
+
 
 class AccessBlocker():
     """
@@ -34,9 +26,7 @@ class AccessBlocker():
     """
 
     def __init__(self, output_filename):
-        """
-        Initialize attributes to keep track of users login attempts.
-        """
+        """ Initialize attributes to keep track of users login attempts. """
         self.block_expiration_times = {}
         self.candidates = {}
         self.output_filename = output_filename  #
@@ -71,8 +61,7 @@ class AccessBlocker():
                     self.add_to_candidate_list(request)
 
     def write_blocked_request(self, request):
-        """ """
-        date_formatting = '%d/%b/%Y:%H:%M:%S %z'  # delete later
+        """ Format information and write it to log file. """
         log = request["ip"] + " - - [" + \
             request["date"].strftime(date_formatting) + "] \"" + \
             request["request"] + "\" " + request["response_code"] + " " + \
@@ -94,7 +83,7 @@ class AccessBlocker():
         del self.candidates[request["ip"]]
 
     def add_to_candidate_list(self, request):
-        """ Add new ip to candidates"""
+        """ Add new ip to candidates. """
         self.candidates[request["ip"]] = [request["date"]]
 
     def block_user(self, ip, start_time):
