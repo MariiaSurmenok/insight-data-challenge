@@ -93,8 +93,8 @@ def write_information_to_file(file, log_line):
         f_obj.write(log_line + "\n")
 
 
-# filename = "../insight_testsuite/tests/test_features/log_input/log.txt"
-filename = "../log_input/log.txt"
+filename = "../insight_testsuite/tests/test_features/log_input/log.txt"
+# filename = "../log_input/log.txt"
 ip_frequency = Counter()
 resources = Counter()
 
@@ -106,17 +106,21 @@ for entry in read_from_file(filename):
     count_bandwidth_resources(resources, entry)
 
 top_hosts = ip_frequency.most_common(10)
-top_resources = resources.most_common(10)
 
-# Write results to files
+# Write results to a file
 for host in top_hosts:
     information = host[0] + "," + str(host[1])
     write_information_to_file("../log_output/hosts.txt", information)
 
+top_resources = resources.most_common(10)
+
+# Write results to a file
 for resource in top_resources:
     write_information_to_file("../log_output/resources.txt", resource[0])
 
 print("Feature 1 and 2 stop")
+
+
 # FEATURE 3
 # Need refactor
 # Create array with size 3600 that will represent seconds in 60 minutes
@@ -133,7 +137,6 @@ start = request["date"]
 stop = start + timedelta(0, 3600)
 
 
-
 def save_hour(key_date, top_10, requests_in_current_hour):
     """
     Save number of requests in current hour
@@ -144,6 +147,7 @@ def save_hour(key_date, top_10, requests_in_current_hour):
         top_10 (dict): 10 most busiest hours
         requests_in_current_hour (list): list of requests in this hour
     """
+
     if len(top_10) == 10:
         if sum(requests_in_current_hour) > min(top_10.values()):
             del top_10[min(top_10, key=top_10.get)]
@@ -162,10 +166,7 @@ def update_statistics(start_date, stop_date, top_10, requests_in_current_hour):
 
 
 while request:
-    if request["date"] < stop:
-        requests_per_hour[(request["date"] - start).seconds] += 1
-
-    while request["date"] > stop:
+    while request["date"] >= stop:
         # Save only the top 10 popular hours.
         date_stamp = start.strftime(date_formatting)
         save_hour(date_stamp, popular_dates, requests_per_hour)
@@ -174,6 +175,9 @@ while request:
         requests_per_hour.append(0)
         start = start + timedelta(0, 1)
         stop = stop + timedelta(0, 1)
+
+    requests_per_hour[(request["date"] - start).seconds] += 1
+
     try:
         request = next(generator)
     except StopIteration:
