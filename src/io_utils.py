@@ -1,12 +1,16 @@
 """
-Set of helper functions for reading, writing and parsing information
+Set of helper functions for reading, writing and parsing information.
 """
 
 import re
 from datetime import datetime
 
 date_formatting = '%d/%b/%Y:%H:%M:%S %z'
-request_pattern = '(?P<ip>\S+).*\s\[(?P<date>.+)\]\s*\"(?P<request>.+)\"\s*(?P<response_code>\d+)\s(?P<response_length>\d+|-)'
+request_pattern = '(?P<ip>\S+).*\s' + \
+                  '\[(?P<date>.+)\]\s*' + \
+                  '\"(?P<request>.+)\"\s*' + \
+                  '(?P<response_code>\d+)\s' + \
+                  '(?P<response_length>\d+|-)'
 url_pattern = '((GET|HEAD|POST)\s+)?(?P<request_url>.+?)\s+(HTTP.*)?$'
 
 
@@ -16,7 +20,7 @@ def parse_log_line(log_line):
     protocol, response_code, and response_length.
     Return parsed information as a dictionary.
     Attributes:
-        log_line (str): one request from log file
+        log_line (str): one request from log file.
     Return:
         dictionary with following keys:
             - ip
@@ -48,7 +52,7 @@ def read_from_file(file):
     """
     Generator that yields line from log file.
     Attributes:
-        file (str): url to log file
+        file (str): url to log file.
     """
     try:
         with open(file) as f_obj:
@@ -64,8 +68,8 @@ def write_information_to_file(file, log_line):
     """
     Append information to a log file.
     Attributes:
-        file (str): log file url
-        log_line (str): information to append
+        file (str): log file url.
+        log_line (str): information to append.
     """
     with open(file, 'a') as f_obj:
         f_obj.write(log_line + "\n")

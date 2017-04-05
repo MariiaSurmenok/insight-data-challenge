@@ -2,7 +2,6 @@
 Implementation of feature 3:
 List in descending order the site’s 10 busiest
 (i.e. most frequently visited) 60-minute period.
-Write to a file named hours.txt.
 """
 
 from datetime import timedelta
@@ -60,7 +59,8 @@ class LoadMeter():
 
     def update_statistics(self):
         """
-        Update statistics about top 10 busiest hours and shift time by 1 second.
+        Update statistics about top 10 busiest hours and shift time
+        by 1 second.
         """
         # Save only the top 10 popular hours.
         date_stamp = self.start.strftime(date_formatting)
@@ -74,22 +74,24 @@ class LoadMeter():
     def save_hour(self, date_stamp):
         """
         Save number of requests in current hour
-        if it is on of the 10 busiest hours
-
+        if it is on of the 10 busiest hours.
         Attributes:
             date_stamp (str): formatted date of the beginning of current date.
         """
-
         if len(self.popular_dates) == 10:
             if sum(self.requests_per_hour) > min(self.popular_dates.values()):
-                del self.popular_dates[min(self.popular_dates, key=self.popular_dates.get)]
+                del self.popular_dates[
+                    min(self.popular_dates, key=self.popular_dates.get)
+                ]
                 self.popular_dates[date_stamp] = sum(self.requests_per_hour)
         else:
             self.popular_dates[date_stamp] = sum(self.requests_per_hour)
 
     def write_busiest_hours(self):
         """ Format information and write it to output file. """
-        top_10_hours = sorted(self.popular_dates.items(), key=lambda x:x[1], reverse=True)
+        top_10_hours = sorted(
+            self.popular_dates.items(), key=lambda x: x[1], reverse=True
+        )
         for entry in top_10_hours:
             log = entry[0] + "," + str(entry[1])
             write_information_to_file(self.output_filename, log)

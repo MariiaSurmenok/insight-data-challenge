@@ -1,10 +1,10 @@
 """
 Implementation of feature 4:
-detect patterns of three consecutive failed login attempts over
+Detect patterns of three consecutive failed login attempts over
 20 seconds in order to block all further attempts to reach the site
 from the same IP address for the next 5 minutes.
 Each attempt that would have been blocked should be written
-to a log file named blocked.txt.
+to a log file.
 """
 
 from datetime import timedelta
@@ -27,15 +27,19 @@ class AccessBlocker():
     """
 
     def __init__(self, output_filename):
-        """ Initialize class variables to keep track of users login attempts. """
+        """
+        Initialize class variables to keep track of users login attempts.
+        Attributes:
+            output_filename (str): destination to write result.
+        """
         self.block_expiration_times = {}
         self.candidates = {}
         self.output_filename = output_filename  #
 
     def check_request(self, request):
         """
-        Check user request and decide whether user already blocked, should be blocked,
-        or added to a list of the candidates on block.
+        Check user request and decide whether user already blocked,
+        should be blocked, or added to a list of the candidates on block.
         """
         ip = request["ip"]
 
@@ -91,7 +95,7 @@ class AccessBlocker():
         """
         Add user to banned list.
         Attributes:
-            ip (str): user ip/host
-            start_time (datetime): time of the last failed attempt to login
+            ip (str): user ip/host.
+            start_time (datetime): time of the last failed attempt to login.
         """
         self.block_expiration_times[ip] = start_time + timedelta(0, 300)
