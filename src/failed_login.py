@@ -9,7 +9,7 @@ to a log file named blocked.txt.
 
 from datetime import timedelta
 
-from io_utils import date_formatting, read_from_file, write_information_to_file
+from io_utils import date_formatting, write_information_to_file
 
 
 class AccessBlocker():
@@ -17,16 +17,17 @@ class AccessBlocker():
     Implements detection of failed login and keep track
     of blocked users requests.
 
-    Two class variables:
+    Class variables:
         block_expiration_times (dict): key (str)- user ip,
                                        value (datetime) - end of blocking.
         candidates (dict): key (str) - user ip,
                            value (list) - list of datetime of at most
                            3 failed attempts to login.
+        output_filename (str): url to write the result.
     """
 
     def __init__(self, output_filename):
-        """ Initialize attributes to keep track of users login attempts. """
+        """ Initialize class variables to keep track of users login attempts. """
         self.block_expiration_times = {}
         self.candidates = {}
         self.output_filename = output_filename  #
@@ -61,7 +62,7 @@ class AccessBlocker():
                     self.add_to_candidate_list(request)
 
     def write_blocked_request(self, request):
-        """ Format information and write it to log file. """
+        """ Format information and write it to output file. """
         log = request["ip"] + " - - [" + \
             request["date"].strftime(date_formatting) + "] \"" + \
             request["request"] + "\" " + request["response_code"] + " " + \

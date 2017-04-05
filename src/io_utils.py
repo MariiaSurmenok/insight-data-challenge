@@ -22,6 +22,7 @@ def parse_log_line(log_line):
             - ip
             - date
             - url
+            - request (raw request)
             - response_code
             - response_length
     """
