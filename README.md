@@ -9,7 +9,7 @@ Coding challenge for Data Engineering Fellow selection process. Implement basic 
 
 ## Running the tests
 In terminal/console
-* hange current directory to insight_testsuite
+* change current directory to insight_testsuite
 `cd insight-data-challenge\insight_testsuite\`
 * run run_tests.sh
 `./run_tests.sh`
