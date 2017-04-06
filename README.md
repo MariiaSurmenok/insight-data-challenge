@@ -1,5 +1,5 @@
 # Insight Data Challenge
-Coding challenge for Data Engineering Fellow selection process. Implement basic analytics on server log file.dfdd
+Coding challenge for Data Engineering Fellow selection process. Implementation of basic analytics on server log file.
 
 ## Prerequisites
 [Python 3.6](https://www.python.org/downloads/)
