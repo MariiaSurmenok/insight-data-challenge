@@ -34,7 +34,7 @@ class AccessBlocker():
         """
         self.block_expiration_times = {}
         self.candidates = {}
-        self.output_filename = output_filename  #
+        self.output_filename = output_filename
 
     def check_request(self, request):
         """
@@ -77,7 +77,7 @@ class AccessBlocker():
         """ Check if some failed request are expired, add new one. """
         failed_requests_dates = self.candidates[request["ip"]]
         for i in range(0, len(failed_requests_dates)):
-            if (failed_requests_dates[i] - request["date"]).seconds < 20:
+            if (request["date"] - failed_requests_dates[i]).seconds > 20:
                 failed_requests_dates.pop(i)
         failed_requests_dates.append(request["date"])
         if len(failed_requests_dates) == 3:
