@@ -33,7 +33,7 @@ class LoadMeter():
         self.input_filename = input_filename
         self.output_filename = output_filename
         self.requests_per_hour = [0] * 3600
-        self.popular_dates = {}
+        self.popular_dates = {} # 10 elements maximum
         self.start = ""
         self.stop = ""
 

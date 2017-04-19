@@ -59,7 +59,9 @@ def read_from_file(file):
             for line in f_obj:
                 parsed_line = parse_log_line(line)
                 if parsed_line:
-                    yield parse_log_line(line)
+                    # yield parse_log_line(line)
+                    # we don't need to parse it again
+                    yield parsed_line
     except FileNotFoundError:
         print("read_from_file: File not found")
 
