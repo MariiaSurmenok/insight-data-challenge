@@ -1,5 +1,9 @@
-# Insight Data Challenge
-Coding challenge for Data Engineering Fellow selection process. Implementation of basic analytics on server log file.
+# Server log analysis
+Implementation of basic analytics on server log file:
+* identify most popular resources on the site that consume the most bandwidth;
+* list in descending order the site’s 10 most frequently visited 60-minute period;
+* find active hosts/IP addresses that have accessed the site;
+* detect patterns of three consecutive failed login attempts over 20 seconds and log all further attempts to reach the site from the same IP address for the next 5 minutes.
 
 ## Prerequisites
 [Python 3.6](https://www.python.org/downloads/)
