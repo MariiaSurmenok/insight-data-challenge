@@ -9,7 +9,7 @@ Implementation of basic analytics on server log file:
 [Python 3.6](https://www.python.org/downloads/)
 
 ## Installing 
-`git clone https://github.com/MariiaSurmenok/insight-data-challenge.git`
+`git clone https://github.com/msurmenok/insight-data-challenge.git`
 
 ## Running the tests
 In terminal/console
@@ -19,4 +19,4 @@ In terminal/console
 `./run_tests.sh`
 
 ## License
-Code released under the [MIT License](https://github.com/MariiaSurmenok/insight-data-challenge/blob/master/LICENSE)
+Code released under the [MIT License](https://github.com/msurmenok/insight-data-challenge/blob/master/LICENSE)
